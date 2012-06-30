@@ -466,6 +466,7 @@ namespace Callisto.Controls
             ((Flyout)sender).IsHitTestVisible = true;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "Runtime EventHandler")]
         public event EventHandler<object> Closed;
         #endregion Methods and Events
 

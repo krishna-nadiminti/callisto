@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI;
@@ -21,6 +22,8 @@ namespace Callisto.Controls
         private Popup _hostPopup;
         private Rect _windowBounds;
         private Button _backButton;
+        private Grid _contentGrid;
+        const int CONTENT_HORIZONTAL_OFFSET = 100;
         #endregion Member Variables
 
         #region Overrides
@@ -28,6 +31,7 @@ namespace Callisto.Controls
         {
             base.OnApplyTemplate();
 
+            // make sure we listen at the right time to add/remove the back button event handlers
             if(_backButton != null)
             {
                 _backButton.Tapped -= OnBackButtonTapped;
@@ -37,6 +41,17 @@ namespace Callisto.Controls
             {
                 _backButton.Tapped += OnBackButtonTapped;
             }
+
+            // need to get these grids in order to set the offsets correctly in RTL situations
+            if (_contentGrid == null)
+            {
+                _contentGrid = GetTemplateChild("SettingsFlyoutContentGrid") as Grid;
+            }
+            _contentGrid.Transitions = new TransitionCollection();
+            _contentGrid.Transitions.Add(new EntranceThemeTransition()
+            {
+                FromHorizontalOffset = CONTENT_HORIZONTAL_OFFSET // TODO: if left edge need to multiply by -1
+            });
         }
         #endregion Overrides
 
@@ -159,6 +174,7 @@ namespace Callisto.Controls
         #endregion Dependency Properties
 
         #region Events
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification="Runtime EventHandler")]
         public event EventHandler<object> Closed;
         #endregion
 
