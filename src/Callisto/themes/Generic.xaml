@@ -471,7 +471,7 @@ limitations under the License.-->
                             </Grid>
 
                             <!-- Settings Panel Content -->
-                            <Grid x:Name="SettingsFlyoutContentGrid" Grid.Row="1" Margin="33,22,40,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                            <Grid x:Name="SettingsFlyoutContentGrid" Grid.Row="1" Margin="33,22,40,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                                 <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
                             </Grid>
 
