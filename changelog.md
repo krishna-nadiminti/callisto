@@ -1,3 +1,4 @@
+
 # Changelog
 
 ## 1.0.10
@@ -32,4 +33,5 @@
 * Fixed incorrect DP registration for Flyout
 
 ## 1.0.0
+
 * Initial RC release
