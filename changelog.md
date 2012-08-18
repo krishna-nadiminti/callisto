@@ -1,5 +1,14 @@
-
 # Changelog
+
+## 1.0.12
+* Fixes #67: removes dependency on BackButtonSnappedGlyph from StandardStyles.xaml so that it is self-contained.
+* Fixes #24: ToggleMenuItem margins for toggle menu items only.  Thanks Nigel!
+* Fixes #57: Checks that if the parent is a Flyout before closing.
+* Compiled against RTM bits for .NET framework
+
+## 1.0.11
+* temporary release for early adopter customers
+* all fixes are in 1.0.12
 
 ## 1.0.10
 * Fixes #26 (again): implementing user suggestions of looking for invalid measures in ActualHeight/Width
@@ -33,5 +42,4 @@
 * Fixed incorrect DP registration for Flyout
 
 ## 1.0.0
-
 * Initial RC release
