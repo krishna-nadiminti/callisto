@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Callisto.Controls;
 using UIElementLeakTester;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -57,14 +49,17 @@ namespace Callisto.TestApp.SamplePages
 				SettingsFlyout settings = new SettingsFlyout();
                 // set the desired width.  If you leave this out, you will get Narrow (346px)
 				settings.FlyoutWidth = (Callisto.Controls.SettingsFlyout.SettingsFlyoutWidth)Enum.Parse(typeof(Callisto.Controls.SettingsFlyout.SettingsFlyoutWidth), settingswidth.SelectionBoxItem.ToString());
+                // optionally change header and content background colors away from defaults (recommended)
+                settings.HeaderBrush = new SolidColorBrush(Colors.Orange);
                 
                 // optionally change header and content background colors away from defaults (recommended)
-                //settings.Background = new SolidColorBrush(Colors.Red);
+                // if using Callisto's AppManifestHelper you can grab the element from some member var you held it in
+                // settings.HeaderBrush = new SolidColorBrush(App.VisualElements.BackgroundColor);
                 settings.HeaderBrush = new SolidColorBrush(Colors.Orange);
-				settings.HeaderText = "Foo Bar Custom Settings";
+                settings.HeaderText = string.Format("{0} Custom Settings", App.VisualElements.DisplayName);
 
                 // provide some logo (preferrably the smallogo the app uses)
-                BitmapImage bmp = new BitmapImage(new Uri("ms-appx:///Assets/SmallLogo.png"));
+                BitmapImage bmp = new BitmapImage(App.VisualElements.SmallLogoUri);
                 settings.SmallLogoImageSource = bmp;
 
                 // set the content for the flyout

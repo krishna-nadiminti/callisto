@@ -1,4 +1,4 @@
-﻿﻿//
+﻿//
 // Copyright (c) 2012 Tim Heuer
 //
 // Licensed under the Microsoft Public License (Ms-PL) (the "License");
@@ -19,6 +19,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -41,6 +42,9 @@ namespace Callisto.Controls
 
         // the 'real' placement mode based on calculations
         private PlacementMode _realizedPlacement;
+
+        private bool _ihmFocusMoved = false;
+        private double _ihmOccludeHeight = 0.0;
         #endregion Member Variables
 
         #region Constants
@@ -76,9 +80,7 @@ namespace Callisto.Controls
 
             this.Loaded += OnLoaded;
 
-            _hostPopup = new Popup();
-            _hostPopup.IsHitTestVisible = false;
-            _hostPopup.Opacity = 0;
+            _hostPopup = new Popup {IsHitTestVisible = false, Opacity = 0};
             _hostPopup.Closed += OnHostPopupClosed;
             _hostPopup.Opened += OnHostPopupOpened;
             _hostPopup.IsLightDismissEnabled = true;
@@ -119,6 +121,49 @@ namespace Callisto.Controls
             Measure(new Size(Double.PositiveInfinity, double.PositiveInfinity));
 
             PerformPlacement(this.HorizontalOffset, this.VerticalOffset);
+
+            // handling the case where it isn't parented to the visual tree
+            // inspect the visual root and adjust.
+            if (_hostPopup.Parent == null)
+            {
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().Showing += OnInputPaneShowing;
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().Hiding += OnInputPaneHiding;
+            }
+
+            var content = Content as Control;
+            if (content != null)
+                content.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+        }
+
+        private void OnInputPaneHiding(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
+        {
+            // if the ihm occluded something and we had to move, we need to adjust back
+            if (_ihmFocusMoved)
+            {
+                _hostPopup.VerticalOffset += _ihmOccludeHeight; // ensure defaults back to normal
+                _ihmFocusMoved = false;
+            }
+        }
+
+        private void OnInputPaneShowing(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
+        {
+            //_hostPopup.VerticalOffset -= (int)args.OccludedRect.Height;
+            FrameworkElement focusedItem = FocusManager.GetFocusedElement() as FrameworkElement;
+
+            if (focusedItem != null)
+            {
+                // if the focused item is within height - occludedrect height - buffer(50)
+                // then it doesn't need to be changed
+                GeneralTransform gt = focusedItem.TransformToVisual(Window.Current.Content);
+                Point focusedPoint = gt.TransformPoint(new Point(0.0, 0.0));
+
+                if (focusedPoint.Y > (_windowBounds.Height - args.OccludedRect.Height - 50))
+                {
+                    _ihmFocusMoved = true;
+                    _ihmOccludeHeight = args.OccludedRect.Height;
+                    _hostPopup.VerticalOffset -= (int)args.OccludedRect.Height;
+                }
+            }  
         }
 
         private static Rect GetBounds(params Point[] interestPoints)
@@ -368,6 +413,15 @@ namespace Callisto.Controls
                 }
             }
 
+            UIElement parent = _hostPopup.Parent as UIElement;
+            if (parent != null)
+            {
+                var transform = parent.TransformToVisual(Window.Current.Content);
+                var offsetAdjustment = transform.TransformPoint(new Point(0, 0));
+                calcH -= offsetAdjustment.X;
+                calcY -= offsetAdjustment.Y;
+            }
+
             _hostPopup.HorizontalOffset = calcH;
             _hostPopup.VerticalOffset = calcY;
             _hostPopup.IsHitTestVisible = true;
@@ -466,11 +520,14 @@ namespace Callisto.Controls
         {
             // important to remove this or else there will be a leak
             Window.Current.Activated -= OnCurrentWindowActivated;
-
+            Windows.UI.ViewManagement.InputPane.GetForCurrentView().Showing -= OnInputPaneShowing;
+            Windows.UI.ViewManagement.InputPane.GetForCurrentView().Hiding -= OnInputPaneHiding;
             if (Closed != null)
             {
                 Closed(this, e);
             }
+
+            IsOpen = false;
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)

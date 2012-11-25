@@ -20,18 +20,16 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using Callisto.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Callisto.OAuth;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Controls;
+using System.Reflection;
 
 namespace Callisto
 {
@@ -417,6 +415,61 @@ namespace Callisto
             CryptographicKey cryptoKey = hashProvider.CreateKey(keyMaterial);
             IBuffer hash = CryptographicEngine.Sign(cryptoKey, CryptographicBuffer.ConvertStringToBinary(input, BinaryStringEncoding.Utf8));
             return CryptographicBuffer.EncodeToBase64String(hash);
+        }
+
+        public static Windows.UI.Color FromName(string colorName)
+        {
+            var colorProperty = typeof(Windows.UI.Colors).GetRuntimeProperty(colorName.UpperFirst());
+            
+            if (colorProperty == null) throw new ArgumentException("This is not a known color name.  Use a proper hex color number.");
+
+            return (Windows.UI.Color)colorProperty.GetValue(null);
+        }
+
+        public static string UpperFirst(this string nameValue)
+        {
+            if (string.IsNullOrEmpty(nameValue)) return string.Empty;
+
+            char[] chars = nameValue.ToCharArray();
+            chars[0] = char.ToUpperInvariant(chars[0]);
+            return new string(chars);
+        }
+
+        public static Windows.UI.Color ToColor(this string hexValue)
+        {
+            if (!hexValue.Contains("#"))
+            { // may be a named color, attempt that
+                var foundColor = FromName(hexValue);
+                if (foundColor != null) return foundColor;
+            }
+
+            hexValue = hexValue.Replace("#", string.Empty);
+
+            // some loose validation (not bullet-proof)
+            if (hexValue.Length < 6)
+            {
+                throw new ArgumentException("This does not appear to be a proper hex color number");
+            }
+
+            byte a = 255;
+            byte r = 255;
+            byte g = 255;
+            byte b = 255;
+
+            int startPosition = 0;
+
+            // the case where alpha is provided
+            if (hexValue.Length == 8)
+            {
+                a = byte.Parse(hexValue.Substring(0, 2), NumberStyles.HexNumber);
+                startPosition = 2;
+            }
+
+            r = byte.Parse(hexValue.Substring(startPosition, 2), NumberStyles.HexNumber);
+            g = byte.Parse(hexValue.Substring(startPosition + 2, 2), NumberStyles.HexNumber);
+            b = byte.Parse(hexValue.Substring(startPosition + 4, 2), NumberStyles.HexNumber);
+
+            return Windows.UI.Color.FromArgb(a, r, g, b);
         }
     }
 }

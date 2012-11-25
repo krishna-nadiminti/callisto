@@ -12,10 +12,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Callisto.TestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>2245870F00C573DD13E77B7967ED41EA4945FA6E</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <PackageCertificateThumbprint>B3C0BDAE2C54D26F756003076C759BEB924BE29E</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>Callisto.TestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -127,11 +127,23 @@
     <Compile Include="SampleInput.xaml.cs">
       <DependentUpon>SampleInput.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SamplePages\CustomDialogSample.xaml.cs">
+      <DependentUpon>CustomDialogSample.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SamplePages\DynamicTextBlock.xaml.cs">
+      <DependentUpon>DynamicTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SamplePages\FlipViewIndicatorSample.xaml.cs">
+      <DependentUpon>FlipViewIndicatorSample.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SamplePages\FlyoutSample.xaml.cs">
       <DependentUpon>FlyoutSample.xaml</DependentUpon>
     </Compile>
     <Compile Include="SamplePages\LiveTileSample.xaml.cs">
       <DependentUpon>LiveTileSample.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SamplePages\NumericUpDownSample.xaml.cs">
+      <DependentUpon>NumericUpDownSample.xaml</DependentUpon>
     </Compile>
     <Compile Include="SamplePages\RatingControl.xaml.cs">
       <DependentUpon>RatingControl.xaml</DependentUpon>
@@ -145,12 +157,16 @@
     <Compile Include="SamplePages\TiltSample.xaml.cs">
       <DependentUpon>TiltSample.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SamplePages\WatermarkTextBoxSample.xaml.cs">
+      <DependentUpon>WatermarkTextBoxSample.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SamplePages\WebViewExtension.xaml.cs">
       <DependentUpon>WebViewExtension.xaml</DependentUpon>
     </Compile>
     <Compile Include="StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisualTreeAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -182,7 +198,27 @@
     <Content Include="Images\grasshopper.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Page Include="SamplePages\CustomDialogSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SamplePages\NumericUpDownSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SamplePages\DynamicTextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SamplePages\FlipViewIndicatorSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SamplePages\SettingsContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SamplePages\WatermarkTextBoxSample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -232,6 +268,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Callisto.TestApp_TemporaryKey.pfx" />

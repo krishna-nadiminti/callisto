@@ -1,15 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿//
+// Copyright (c) 2012 Tim Heuer
+//
+// Licensed under the Microsoft Public License (Ms-PL) (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://opensource.org/licenses/Ms-PL.html
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+using System;
+using System.Diagnostics;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -25,8 +37,19 @@ namespace Callisto.Controls
         private Button _backButton;
         private Grid _contentGrid;
         private Border _rootBorder;
+        private ScrollViewer _contentScrollViewer;
         const int CONTENT_HORIZONTAL_OFFSET = 100;
+        private bool _ihmFocusMoved = false;
+        private double _ihmOccludeHeight = 0.0;
         #endregion Member Variables
+
+        #region Constants
+
+        private const string PART_BACK_BUTTON = "SettingsBackButton";
+        private const string PART_CONTENT_GRID = "SettingsFlyoutContentGrid";
+        private const string PART_ROOT_BORDER = "PART_RootBorder";
+        private const string PART_CONTENT_SCROLLVIEWER = "PART_ContentScrollViewer";
+        #endregion
 
         #region Overrides
         protected override void OnApplyTemplate()
@@ -38,7 +61,7 @@ namespace Callisto.Controls
             {
                 _backButton.Tapped -= OnBackButtonTapped;
             }
-            _backButton = GetTemplateChild("SettingsBackButton") as Button;
+            _backButton = GetTemplateChild(PART_BACK_BUTTON) as Button;
             if(_backButton != null)
             {
                 _backButton.Tapped += OnBackButtonTapped;
@@ -47,16 +70,26 @@ namespace Callisto.Controls
             // need to get these grids in order to set the offsets correctly in RTL situations
             if (_contentGrid == null)
             {
-                _contentGrid = GetTemplateChild("SettingsFlyoutContentGrid") as Grid;
+                _contentGrid = GetTemplateChild(PART_CONTENT_GRID) as Grid;
             }
-            _contentGrid.Transitions = new TransitionCollection();
-            _contentGrid.Transitions.Add(new EntranceThemeTransition()
+            if (_contentGrid != null)
             {
-                FromHorizontalOffset = (SettingsPane.Edge == SettingsEdgeLocation.Right) ? CONTENT_HORIZONTAL_OFFSET : (CONTENT_HORIZONTAL_OFFSET * -1)
-            });
+                _contentGrid.Transitions = new TransitionCollection();
+                _contentGrid.Transitions.Add(new EntranceThemeTransition()
+                                                 {
+                                                     FromHorizontalOffset = (SettingsPane.Edge == SettingsEdgeLocation.Right) ? CONTENT_HORIZONTAL_OFFSET : (CONTENT_HORIZONTAL_OFFSET * -1)
+                                                 });
 
             // need the root border for RTL scenarios
             _rootBorder = GetTemplateChild("PART_ROOT_BORDER") as Border;
+            }
+
+            // need the root border for RTL scenarios
+            _rootBorder = GetTemplateChild(PART_ROOT_BORDER) as Border;
+
+            // need the content scrollviewer to set the fixed width to be the same size as flyout
+            _contentScrollViewer = GetTemplateChild(PART_CONTENT_SCROLLVIEWER) as ScrollViewer;
+            
         }
         #endregion Overrides
 
@@ -90,28 +123,79 @@ namespace Callisto.Controls
             // in RTL languages on the OS, the SettingsPane comes from the left edge
             if (SettingsPane.Edge == SettingsEdgeLocation.Left)
             {
-                _rootBorder.BorderThickness = new Thickness(0, 0, 1, 0);
+                if (_rootBorder != null) _rootBorder.BorderThickness = new Thickness(0, 0, 1, 0);
             }
 
             _settingsWidth = (double)this.FlyoutWidth;
-            _hostPopup.Width = _settingsWidth;
-            this.Width = _settingsWidth;
+            
+            // setting all the widths to be the size of flyout
+            _hostPopup.Width = this.Width = _contentScrollViewer.Width = _settingsWidth;
+            
+            // ensure it comes from the correct edge location
             _hostPopup.SetValue(Canvas.LeftProperty, SettingsPane.Edge == SettingsEdgeLocation.Right ? (_windowBounds.Width - _settingsWidth) : 0);
+
+            // handling the case where it isn't parented to the visual tree
+            // inspect the visual root and adjust.
+            if (_hostPopup.Parent == null)
+            {
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().Showing += OnInputPaneShowing;
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().Hiding += OnInputPaneHiding;
+            }
+        }
+
+        private void OnInputPaneHiding(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
+        {
+            // if the ihm occluded something and we had to move, we need to adjust back
+            if (_ihmFocusMoved)
+            {
+                _hostPopup.VerticalOffset += _ihmOccludeHeight; // ensure defaults back to normal
+                _ihmFocusMoved = false;
+            }
+        }
+
+        private void OnInputPaneShowing(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
+        {
+            FrameworkElement focusedItem = FocusManager.GetFocusedElement() as FrameworkElement;
+
+            if (focusedItem != null)
+            {
+                // if the focused item is within height - occludedrect height - buffer(50)
+                // then it doesn't need to be changed
+                GeneralTransform gt = focusedItem.TransformToVisual(Window.Current.Content);
+                Point focusedPoint = gt.TransformPoint(new Point(0.0, 0.0));
+
+                if (focusedPoint.Y > (_windowBounds.Height - args.OccludedRect.Height - 50))
+                {
+                    _ihmFocusMoved = true;
+                    _ihmOccludeHeight = args.OccludedRect.Height;
+                    _hostPopup.VerticalOffset -= (int)args.OccludedRect.Height;
+                }
+            }            
         }
         
         private void OnBackButtonTapped(object sender, object e)
         {
+            // BUG #47: need to map back button to custom and ability to disable
+
             if (_hostPopup != null)
             {
                 _hostPopup.IsOpen = false;
             }
-            SettingsPane.Show();
+
+            // TEMP: wrapping this to ensure back button doesn't happen in snap/portrait
+            if (ApplicationView.Value != ApplicationViewState.Snapped)
+            {
+                SettingsPane.Show();
+            }
+            
         }
         
         void OnHostPopupClosed(object sender, object e)
         {
             _hostPopup.Child = null;
             Window.Current.Activated -= OnCurrentWindowActivated;
+            Windows.UI.ViewManagement.InputPane.GetForCurrentView().Showing -= OnInputPaneShowing;
+            Windows.UI.ViewManagement.InputPane.GetForCurrentView().Hiding -= OnInputPaneHiding;
             this.Content = null;
 
             if (null != Closed)
@@ -127,6 +211,8 @@ namespace Callisto.Controls
                 this.IsOpen = false;
             }
         }
+
+        public Popup HostPopup { get { return _hostPopup; } }
         #endregion Constructor
 
         #region Dependency Properties
@@ -153,7 +239,22 @@ namespace Callisto.Controls
         }
 
         public static readonly DependencyProperty HeaderBrushProperty =
-            DependencyProperty.Register("HeaderBrush", typeof(SolidColorBrush), typeof(SettingsFlyout), null);
+            DependencyProperty.Register("HeaderBrush", typeof(SolidColorBrush), typeof(SettingsFlyout), new PropertyMetadata(null, OnHeaderBrushColorChanged));
+
+        private static void OnHeaderBrushColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // determine the contrast and set black or white
+            if (e.OldValue != e.NewValue)
+            {
+                SolidColorBrush newBrush = e.NewValue as SolidColorBrush;
+                if (newBrush != null)
+                {
+                    var yiq = ((newBrush.Color.R*299) + (newBrush.Color.G*587) + (newBrush.Color.B*114)) / 1000;
+
+                    Debug.WriteLine(yiq >= 128 ? "black" : "white");
+                }
+            }
+        }
 
         public SettingsFlyoutWidth FlyoutWidth
         {
@@ -183,6 +284,27 @@ namespace Callisto.Controls
 
         public static readonly DependencyProperty SmallLogoImageSourceProperty =
             DependencyProperty.Register("SmallLogoImageSource", typeof(ImageSource), typeof(SettingsFlyout), null);
+
+        /* Issue #81 required these back in to enable overriding to ensure existing
+         * apps would be able to retain their existing colors if they were expecting the old defaults
+         * */
+        public SolidColorBrush ContentForegroundBrush
+        {
+            get { return (SolidColorBrush)GetValue(ContentForegroundBrushProperty); }
+            set { SetValue(ContentForegroundBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty ContentForegroundBrushProperty =
+            DependencyProperty.Register("ContentForegroundBrush", typeof(SolidColorBrush), typeof(SettingsFlyout), null);
+
+        public SolidColorBrush ContentBackgroundBrush
+        {
+            get { return (SolidColorBrush)GetValue(ContentBackgroundBrushProperty); }
+            set { SetValue(ContentBackgroundBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty ContentBackgroundBrushProperty =
+            DependencyProperty.Register("ContentBackgroundBrush", typeof(SolidColorBrush), typeof(SettingsFlyout), null);
         
         #endregion Dependency Properties
 

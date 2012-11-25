@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.2.5 (28-OCT-2012)
+* NEW: Added CustomDialog control
+* Fixes #110: Implemented FromName method to enable use of named values in manifest for color in AppManifestHelper
+
+## 1.2.4 (16-OCT-2012)
+* NEW: Added NumericUpDown control
+* NEW: ColorContrastConverter which does a YIQ calculation to determine white/black
+* NEW: SettingsManagement API making it easier to do app-wide registration of SettingsFlyout elements.  Thanks Scott Dorman!  Community contributions FTW!
+* NEW: Header in SettingsFlyout will automatically set contrast based on HeaderBrush color set.
+* Fixes #104 with introduction of SettingsBackButtonStyle2
+* Fixes #99 will null checks
+
+## 1.2.3 (05-OCT-2012)
+* HOTFIX: Fix #96 for converting without using InvariantCulture.  Sorry :-(
+
+## 1.2.2 (04-OCT-2012)
+* BREAKING CHANGE: Fixes #81 where the defaults to not honor the UI guidelines.  Reluctantly added new DPs for override if needed (but shouldn't be used)
+* Fixes #74: Incorrect null check on WatermarkTextBox DP in property changed callback
+* Fixes #75: Made Margin on Rating template bound but kept defaults for compat
+* Fixes #83: Menu default focus issues.  Thanks lukasf!
+* Fixes #82: If Flyout.HostPopup has a parent then some of the positioning is wrong.
+* Fixes #79: Ensure IsOpen set to false on Flyout when the host Popup closes.  Thanks Stefan!
+* TiltEffect: Stop tilt effect if pointer capture is lost
+* Fixes #85: SettingsFlyout/Flyout for cases where input controls might be there and the IHM (aka software keyboard) might occlude the view.
+* Fixes #86: SettingsFlyout 1px border to match UI design specs where border is 80% brightness of HeaderBrush (added ColorBrightnessConverter)
+* NEW: Added AppManifestHelper to quickly parse out the VisualElements from the AppxManifest.xml
+
+## 1.2.1 (03-SEP-2012)
+* NEW: Added WatermarkTextBox control
+* NEW: Added FlipViewIndicator control (hat tip to Diederik Krols -- thx for the help!)
+
+## 1.1.0
+* Fixes #69: Back button in snapped mode will attempt to show SettingsPane.  Put temp provisioin in to prevent.
+* NEW: Adding DynamicTextBlock for CharacterEllipsis mode on a TextBlock
+
+## 1.0.13
+* Fixes #58: mostly fixing this bug maintaining the UI guidelines on margin/edge content, but hosting within ScrollViewer to enable edge-to-edge scroll behavior if content large enough.
+* Fix for SettingsFlyout when OS is an RTL language.  On RTL, SettingsPane comes from the left edge and thus the flyout needs to respond that way.
+
 ## 1.0.12
 * Fixes #67: removes dependency on BackButtonSnappedGlyph from StandardStyles.xaml so that it is self-contained.
 * Fixes #24: ToggleMenuItem margins for toggle menu items only.  Thanks Nigel!

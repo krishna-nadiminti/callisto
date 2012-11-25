@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -50,7 +51,12 @@ namespace Callisto.TestApp
 				Samples.Add(new SamplePage() { Name = "Tilt Effect", Page = typeof(SamplePages.TiltSample) });
 				Samples.Add(new SamplePage() { Name = "LiveTile", Page = typeof(SamplePages.LiveTileSample) });
                 Samples.Add(new SamplePage() { Name = "Rating", Page = typeof(SamplePages.RatingControl) });
+                Samples.Add(new SamplePage() { Name = "DynamicTextBlock", Page = typeof(SamplePages.DynamicTextBlock) });
                 Samples.Add(new SamplePage() { Name = "WebViewExtension", Page = typeof(SamplePages.WebViewExtension) });
+                Samples.Add(new SamplePage() { Name = "FlipViewIndicator", Page = typeof(SamplePages.FlipViewIndicatorSample) });
+                Samples.Add(new SamplePage() { Name = "WatermarkTextBox", Page = typeof(SamplePages.WatermarkTextBoxSample) });
+                Samples.Add(new SamplePage() { Name = "NumericUpDown", Page = typeof(SamplePages.NumericUpDownSample) });
+			    Samples.Add(new SamplePage() {Name = "CustomDialog", Page = typeof (SamplePages.CustomDialogSample) });
 				this.DataContext = Samples;
 			}
 		}
@@ -64,6 +70,17 @@ namespace Callisto.TestApp
         private void Image_PointerPressed_1(object sender, PointerRoutedEventArgs e)
         {
             ObjectTracker.GarbageCollect();
+        }
+
+        private void DialogCancelClicked(object sender, RoutedEventArgs e)
+        {
+            LoginDialog.IsOpen = false;
+        }
+
+        private void LoginDialog_BackButtonClicked_1(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Dialog back button clicked");
+            LoginDialog.IsOpen = false;
         }
 	}
 }
