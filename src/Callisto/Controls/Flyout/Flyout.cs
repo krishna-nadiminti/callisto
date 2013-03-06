@@ -61,6 +61,9 @@ namespace Callisto.Controls
         {
             get { return _hostPopup; }
         }
+
+        public bool ManageInputPane { get; set; }
+
         #endregion Public Properties
 
         /// <summary>
@@ -147,6 +150,9 @@ namespace Callisto.Controls
 
         private void OnInputPaneShowing(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
         {
+            if (!ManageInputPane)
+                return;
+
             //_hostPopup.VerticalOffset -= (int)args.OccludedRect.Height;
             FrameworkElement focusedItem = FocusManager.GetFocusedElement() as FrameworkElement;
 
@@ -522,6 +528,7 @@ namespace Callisto.Controls
             Window.Current.Activated -= OnCurrentWindowActivated;
             Windows.UI.ViewManagement.InputPane.GetForCurrentView().Showing -= OnInputPaneShowing;
             Windows.UI.ViewManagement.InputPane.GetForCurrentView().Hiding -= OnInputPaneHiding;
+
             if (Closed != null)
             {
                 Closed(this, e);

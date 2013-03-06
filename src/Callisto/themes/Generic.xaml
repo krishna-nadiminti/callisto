@@ -47,6 +47,7 @@ limitations under the License.-->
             <SolidColorBrush x:Key="FlipViewIndicatorSelectedThemeBrush">#FFFFFFFF</SolidColorBrush>
             <x:Double x:Key="CustomDialogBorderThemeThickness">0</x:Double>
             <SolidColorBrush x:Key="CustomDialogBorderThemeBrush">#FFFFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="CustomDialogBackgroundThemeBrush">#FFFFFFFF</SolidColorBrush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="FlyoutBorderBrush">#FF212121</SolidColorBrush>
@@ -74,6 +75,7 @@ limitations under the License.-->
             <SolidColorBrush x:Key="FlipViewIndicatorSelectedThemeBrush">#FF000000</SolidColorBrush>
             <x:Double x:Key="CustomDialogBorderThemeThickness">0</x:Double>
             <SolidColorBrush x:Key="CustomDialogBorderThemeBrush">#FFFFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="CustomDialogBackgroundThemeBrush">#FF000000</SolidColorBrush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="FlyoutBorderBrush" Color="{StaticResource SystemColorButtonTextColor}" />
@@ -101,6 +103,7 @@ limitations under the License.-->
             <SolidColorBrush x:Key="FlipViewIndicatorSelectedThemeBrush" Color="{StaticResource SystemColorHighlightColor}" />
             <x:Double x:Key="CustomDialogBorderThemeThickness">1</x:Double>
             <SolidColorBrush x:Key="CustomDialogBorderThemeBrush">#FFFFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="CustomDialogBackgroundThemeBrush" Color="{StaticResource SystemColorButtonFaceColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -476,6 +479,7 @@ limitations under the License.-->
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="MaxWidth" Value="646" />
+        <Setter Property="MinWidth" Value="320" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SettingsFlyout">
@@ -1108,10 +1112,10 @@ limitations under the License.-->
                 <ControlTemplate TargetType="local:NumericUpDown">
                     <Grid>
                         <Grid.Resources>
-                            <Style x:Name="IncrementButtonStyle" TargetType="Button">
+                            <Style x:Name="IncrementButtonStyle" TargetType="RepeatButton">
                                 <Setter Property="Template">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
+                                        <ControlTemplate TargetType="RepeatButton">
                                             <Grid>
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="CommonStates">
@@ -1290,14 +1294,14 @@ limitations under the License.-->
                                       IsTabStop="False"
                                       ZoomMode="Disabled" />
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
-                            <Button x:Name="PART_IncrementButton"
+                            <RepeatButton x:Name="PART_IncrementButton"
                                     Style="{StaticResource IncrementButtonStyle}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     IsTabStop="False" IsEnabled="False"
                                     Content="&#xE109;" FontWeight="Bold"
                                     FontSize="{TemplateBinding FontSize}"
                                     VerticalAlignment="Stretch"/>
-                            <Button x:Name="PART_DecrementButton"
+                            <RepeatButton x:Name="PART_DecrementButton"
                                     Style="{StaticResource IncrementButtonStyle}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     IsTabStop="False" IsEnabled="False"
@@ -1316,6 +1320,7 @@ limitations under the License.-->
         <Setter Property="BorderThickness" Value="{StaticResource CustomDialogBorderThemeThickness}"/>
         <Setter Property="BorderBrush" Value="{StaticResource CustomDialogBorderThemeBrush}" />
         <Setter Property="BackButtonVisibility" Value="Collapsed" />
+        <Setter Property="Background" Value="{StaticResource CustomDialogBackgroundThemeBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:CustomDialog">
@@ -1430,11 +1435,78 @@ limitations under the License.-->
                                         </StackPanel>
                                     </Border>
                                     <Button x:Name="PART_BackButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,0,0"
-                                        Style="{StaticResource DialogBackButtonStyle}" Visibility="{TemplateBinding BackButtonVisibility}"/>
+                                        Style="{StaticResource DialogBackButtonStyle}" Command="{TemplateBinding BackButtonCommand}" CommandParameter="{TemplateBinding BackButtonCommandParameter}" Visibility="{TemplateBinding BackButtonVisibility}"/>
                                 </Grid>
                             </Border>
                         </Grid>
                     </Popup>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:DropDownButton">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="FontSize" Value="56"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".8"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ArrowGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".8"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".4"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ArrowGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".4"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".4"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ArrowGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=".4"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unfocused"/>
+                                <VisualState x:Name="PointerFocused"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Margin}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <ContentPresenter HorizontalAlignment="Left" x:Name="ContentPresenter" Content="{TemplateBinding Content}" FontWeight="Light" FontSize="{TemplateBinding FontSize}" Margin="0,0,12,0" Foreground="{TemplateBinding Foreground}" />
+                            <TextBlock x:Name="ArrowGlyph" FontFamily="Segoe UI Symbol" Text="&#xE228;" FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                        </StackPanel>
+                        <Rectangle x:Name="FocusVisualWhite" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="{StaticResource FocusVisualWhiteStrokeThemeBrush}" StrokeDashArray="1,1"/>
+                        <Rectangle x:Name="FocusVisualBlack" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{StaticResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

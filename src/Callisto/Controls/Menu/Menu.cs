@@ -1,4 +1,4 @@
-﻿//
+﻿﻿//
 // Copyright (c) 2012 Tim Heuer
 //
 // Licensed under the Microsoft Public License (Ms-PL) (the "License");

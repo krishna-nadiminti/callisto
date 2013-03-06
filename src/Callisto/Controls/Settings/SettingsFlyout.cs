@@ -79,9 +79,6 @@ namespace Callisto.Controls
                                                  {
                                                      FromHorizontalOffset = (SettingsPane.Edge == SettingsEdgeLocation.Right) ? CONTENT_HORIZONTAL_OFFSET : (CONTENT_HORIZONTAL_OFFSET * -1)
                                                  });
-
-            // need the root border for RTL scenarios
-            _rootBorder = GetTemplateChild("PART_ROOT_BORDER") as Border;
             }
 
             // need the root border for RTL scenarios
