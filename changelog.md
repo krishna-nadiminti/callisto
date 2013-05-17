@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.2.9 (22-APR-2013)
+* Fix #190: Setting IsOpen to false when the flyout is dismissed
+* Fix #189: Fixing en-ZA localization and adding en fallback resources
+
+## 1.2.8 (11-APR-2013)
+* Fix #184: Quick fix to SettingsFlyout to prevent horizontal overbounce visual artifact
+
+## 1.2.7 (28-MAR-2013)
+* NEW: Added DropdownButton control
+* Fix #47: Added BackClick event (thanks lprichar!)
+* Fix #167: Added listener for Window.SizeChanged
+* Fix #171: Enhancing flyout positioning logic
+* Fix #156: Ensure back button on SettingsFlyout works for keyboard enter/space bar
+* Fix #136: Unsealed CustomDialog
+* Fix #140: Fix flyout parent check for menu
+* NumericUpDown: Changed to repeat buttons to enable holding down the button on mouse click
+* Ratings: fixed some random bugs
+* Ratings: Added ReadOnlyFill (thanks ScottIsAFool!)
+
+## 1.2.6 (04-DEC-2012)
+* Fix #129: Added BackButtonCommand/Parameter to CustomDialog
+* Fix #131: Added default colors for Background to CustomDialog
+
 ## 1.2.5 (28-OCT-2012)
 * NEW: Added CustomDialog control
 * Fixes #110: Implemented FromName method to enable use of named values in manifest for color in AppManifestHelper

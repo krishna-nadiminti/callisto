@@ -156,9 +156,13 @@ namespace Callisto.Controls
 
         private void OnInputPaneShowing(Windows.UI.ViewManagement.InputPane sender, Windows.UI.ViewManagement.InputPaneVisibilityEventArgs args)
         {
+<<<<<<< HEAD
             if (!ManageInputPane)
                 return;
 
+            //_hostPopup.VerticalOffset -= (int)args.OccludedRect.Height;
+=======
+>>>>>>> af84ae25e262308e51d7ee9d1679a3121838f819
             FrameworkElement focusedItem = FocusManager.GetFocusedElement() as FrameworkElement;
 
             if (focusedItem != null)

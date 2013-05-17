@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -23,7 +24,7 @@ namespace Callisto.Controls
     [TemplatePart(Name = CustomDialog.PART_ROOT_BORDER, Type = typeof(Border))]
     [TemplatePart(Name = CustomDialog.PART_ROOT_GRID, Type = typeof(Grid))]
     [TemplatePart(Name = CustomDialog.PART_CONTENT, Type = typeof(ContentPresenter))]
-    public sealed class CustomDialog : ContentControl
+    public class CustomDialog : ContentControl
     {
         public CustomDialog()
         {
@@ -131,6 +132,24 @@ namespace Callisto.Controls
 
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(CustomDialog), null);
+
+        public ICommand BackButtonCommand
+        {
+            get { return (ICommand)GetValue(BackButtonCommandProperty); }
+            set { SetValue(BackButtonCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty BackButtonCommandProperty =
+            DependencyProperty.Register("BackButtonCommand", typeof(ICommand), typeof(CustomDialog), new PropertyMetadata(DependencyProperty.UnsetValue));
+
+        public object BackButtonCommandParameter
+        {
+            get { return (object)GetValue(BackButtonCommandParameterProperty); }
+            set { SetValue(BackButtonCommandParameterProperty, value); }
+        }
+
+        public static readonly DependencyProperty BackButtonCommandParameterProperty =
+            DependencyProperty.Register("BackButtonCommandParameter", typeof(object), typeof(CustomDialog), new PropertyMetadata(DependencyProperty.UnsetValue));
         #endregion
     }
 }

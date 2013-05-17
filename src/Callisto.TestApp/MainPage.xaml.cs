@@ -19,9 +19,21 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Callisto.TestApp
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
+    public class DebugWriteCommand : ICommand
+    {
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void Execute(object parameter)
+        {
+            Debug.WriteLine(string.Format("DebugWriteCommand Fired: {0}", parameter.ToString()));
+        }
+    }
+
 	public sealed partial class MainPage : Page
 	{
 		public sealed class SamplePage
@@ -34,7 +46,14 @@ namespace Callisto.TestApp
 		public MainPage()
 		{
 			this.InitializeComponent();
+            Loaded += MainPage_Loaded;
 		}
+
+        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoginDialog.BackButtonCommand = new DebugWriteCommand();
+            LoginDialog.BackButtonCommandParameter = "Hello world";
+        }
 
 		/// <summary>
 		/// Invoked when this page is about to be displayed in a Frame.
@@ -56,7 +75,8 @@ namespace Callisto.TestApp
                 Samples.Add(new SamplePage() { Name = "FlipViewIndicator", Page = typeof(SamplePages.FlipViewIndicatorSample) });
                 Samples.Add(new SamplePage() { Name = "WatermarkTextBox", Page = typeof(SamplePages.WatermarkTextBoxSample) });
                 Samples.Add(new SamplePage() { Name = "NumericUpDown", Page = typeof(SamplePages.NumericUpDownSample) });
-			    Samples.Add(new SamplePage() {Name = "CustomDialog", Page = typeof (SamplePages.CustomDialogSample) });
+			    Samples.Add(new SamplePage() { Name = "CustomDialog", Page = typeof(SamplePages.CustomDialogSample) });
+                Samples.Add(new SamplePage() { Name = "DropDownButton", Page = typeof(SamplePages.DropDownButtonSample) });
 				this.DataContext = Samples;
 			}
 		}
