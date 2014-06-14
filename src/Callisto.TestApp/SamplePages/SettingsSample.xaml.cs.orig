@@ -43,19 +43,22 @@ namespace Callisto.TestApp.SamplePages
 
 		private void BlankPage_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
 		{
-            // Note this is kept here for posterity but shouldn't be used
-            // see the next sample of using the Windows.UI.Xaml.Controls.SettingsFlyout
-            // in Windows 8.1 for the replacement if you were using this code example before.
 			SettingsCommand cmd = new SettingsCommand("sample", "Sample Custom Setting", (x) =>
 			{
                 // create a new instance of the flyout
-				Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
+				SettingsFlyout settings = new SettingsFlyout();
                 // set the desired width.  If you leave this out, you will get Narrow (346px)
 				settings.FlyoutWidth = (Callisto.Controls.SettingsFlyout.SettingsFlyoutWidth)Enum.Parse(typeof(Callisto.Controls.SettingsFlyout.SettingsFlyoutWidth), settingswidth.SelectionBoxItem.ToString());
-                // optionally change header and content background colors away from defaults (recommended)
-                settings.HeaderBrush = new SolidColorBrush(Colors.Orange);
                 
                 // optionally change header and content background colors away from defaults (recommended)
+<<<<<<< HEAD
+                //settings.Background = new SolidColorBrush(Colors.Red);
+                settings.HeaderBrush = new SolidColorBrush(Colors.Orange);
+				settings.HeaderText = "Foo Bar Custom Settings";
+
+                // provide some logo (preferrably the smallogo the app uses)
+                BitmapImage bmp = new BitmapImage(new Uri("ms-appx:///Assets/SmallLogo.png"));
+=======
                 // if using Callisto's AppManifestHelper you can grab the element from some member var you held it in
                 // settings.HeaderBrush = new SolidColorBrush(App.VisualElements.BackgroundColor);
                 settings.HeaderBrush = new SolidColorBrush(Colors.Orange);
@@ -63,6 +66,7 @@ namespace Callisto.TestApp.SamplePages
 
                 // provide some logo (preferrably the smallogo the app uses)
                 BitmapImage bmp = new BitmapImage(App.VisualElements.SmallLogoUri);
+>>>>>>> c738cf6b12041dd3207550735b08b3cae9c7cf38
                 settings.SmallLogoImageSource = bmp;
 
                 // set the content for the flyout
@@ -76,24 +80,7 @@ namespace Callisto.TestApp.SamplePages
 				ObjectTracker.Track(settings);
 			});
 
-            // note this is the new and preferred way in Windows 8.1 using 
-            // Windows.UI.Xaml.Controls.SettingsFlyout
-            // This sample is kept here to show an example of this
-            SettingsCommand cmd2 = new SettingsCommand("sample2", "Sample 2", (x) =>
-            {
-                Windows.UI.Xaml.Controls.SettingsFlyout settings = new Windows.UI.Xaml.Controls.SettingsFlyout();
-                settings.Width = 500;
-                settings.HeaderBackground = new SolidColorBrush(Colors.Orange);
-                settings.HeaderForeground = new SolidColorBrush(Colors.Black);
-                settings.Title = string.Format("{0} Custom 2", App.VisualElements.DisplayName);
-                settings.IconSource = new BitmapImage(Windows.ApplicationModel.Package.Current.Logo);
-                settings.Content = new SettingsContent();
-                settings.Show();
-                ObjectTracker.Track(settings);
-            });
-
 			args.Request.ApplicationCommands.Add(cmd);
-            args.Request.ApplicationCommands.Add(cmd2);
 		}
 
 		private void ShowSettings(object sender, RoutedEventArgs e)

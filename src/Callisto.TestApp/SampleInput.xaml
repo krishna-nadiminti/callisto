@@ -6,14 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
+    Height="550"
+    d:DesignHeight="550"
     d:DesignWidth="400">
 
     <Grid>
         <StackPanel>
             <TextBlock Margin="0,0,0,18" FontFamily="Segoe UI" FontWeight="SemiLight" Typography.StylisticSet20="True" FontSize="26.667" Text="Add Item" />
-            <TextBox x:Name="EnterItemName" Width="300" Height="35" HorizontalAlignment="Left" />
-            <Button x:Name="defaultbutton" Content="Add" Width="100" Margin="0,14,0,0" Click="defaultbutton_Click_1" HorizontalAlignment="Right" Background="Teal" />
+            <TextBox x:Name="EnterItemName" Width="300" Height="35" HorizontalAlignment="Left" Margin="10,30" />
+            <TextBox x:Name="EnterItemName2" Width="300" Height="35" HorizontalAlignment="Left" Margin="10,30"/>
+            <TextBox x:Name="EnterItemName3" Width="300" Height="35" HorizontalAlignment="Left" Margin="10,30" />
         </StackPanel>
+        <Button x:Name="defaultbutton" Content="Add" Width="100" Margin="0,14,0,0" Click="defaultbutton_Click_1" HorizontalAlignment="Right" Background="Teal" VerticalAlignment="Bottom" />
     </Grid>
 </UserControl>

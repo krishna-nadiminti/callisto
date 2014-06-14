@@ -1,4 +1,4 @@
-﻿﻿//
+﻿//
 // Copyright (c) 2012 Tim Heuer
 //
 // Licensed under the Microsoft Public License (Ms-PL) (the "License");
@@ -95,6 +95,8 @@ namespace Callisto.Controls
         public SettingsFlyout()
         {
             this.DefaultStyleKey = typeof(SettingsFlyout);
+
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) return;
 
             _windowBounds = Window.Current.Bounds;
 
