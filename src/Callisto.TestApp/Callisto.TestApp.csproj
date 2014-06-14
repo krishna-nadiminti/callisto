@@ -114,9 +114,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\Callisto\Callisto.csproj">
+    <ProjectReference Include="..\Callisto\Callisto-CustomDialog.csproj">
       <Project>{42e8be6b-9a3c-4236-a0c7-8a8dbd757021}</Project>
-      <Name>Callisto</Name>
+      <Name>Callisto-CustomDialog</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

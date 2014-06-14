@@ -106,9 +106,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Callisto\Callisto.csproj">
-      <Project>{DE7E43C9-3514-4582-B101-53C6DB4C5E45}</Project>
-      <Name>Callisto</Name>
+    <ProjectReference Include="..\..\Callisto\Callisto-CustomDialog.csproj">
+      <Project>{42E8BE6B-9A3C-4236-A0C7-8A8DBD757021}</Project>
+      <Name>Callisto-CustomDialog</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

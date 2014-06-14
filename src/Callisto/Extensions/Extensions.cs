@@ -20,7 +20,10 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#if !LITE
 using Callisto.OAuth;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -320,6 +323,7 @@ namespace Callisto
             }
         }
 
+#if NOTSUREWHYTHISDOESNTCOMPILE
         public static void AddRange(this IDictionary<string, string> collection, NameValueCollection range)
         {
             foreach (string key in range.AllKeys)
@@ -350,7 +354,9 @@ namespace Callisto
             }
             return sb.ToString();
         }
+#endif
 
+#if !LITE
         public static string Concatenate(this WebParameterCollection collection, string separator, string spacer)
         {
             var sb = new StringBuilder();
@@ -373,7 +379,7 @@ namespace Callisto
 
             return sb.ToString();
         }
-
+#endif
         public static string UrlEncode(this string value)
         {
             return Uri.EscapeDataString(value);
@@ -389,6 +395,7 @@ namespace Callisto
             return new Uri(value);
         }
 
+#if !LITE
         public static string ToRequestValue(this OAuthSignatureMethod signatureMethod)
         {
             var value = signatureMethod.ToString().ToUpper();
@@ -408,6 +415,7 @@ namespace Callisto
                     return OAuthSignatureMethod.PlainText;
             }
         }
+#endif
 
         public static string HashWith(this string input, MacAlgorithmProvider hashProvider, string key)
         {
