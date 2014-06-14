@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,6 +14,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <DocumentationFile>bin\Callisto.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +35,7 @@
     <DefineConstants>TRACE;NETFX_CORE;INCLUDE_EXPERIMENTAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Callisto.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -141,6 +145,8 @@
     <Compile Include="Controls\Rating\ValueChangedEventHandler.cs" />
     <Compile Include="Controls\Settings\SettingsFlyout.cs" />
     <Compile Include="Controls\WatermarkTextBox\WatermarkTextBox.cs" />
+    <Compile Include="Controls\WrapPanel\OrientedSize.cs" />
+    <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BrushToColorConverter.cs" />
     <Compile Include="Converters\ColorBrightnessConverter.cs" />
@@ -150,6 +156,7 @@
     <Compile Include="Converters\RelativeTimeConverter.cs" />
     <Compile Include="Effects\TiltEffect.cs" />
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\WebViewExtension.cs" />
     <Compile Include="OAuth\OAuthHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -237,8 +244,8 @@
       <SubType>Designer</SubType>
     </PRIResource>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0 (25-OCT-2013)
+* BREAKING CHANGES!!!
+* Starting in 1.4.0, Callisto will only support Windows 8.1 applications
+* Deprecated: Flyout, Menu, SettingsFlyout, WatermarkTextBox
+* MODIFIED: AppSettings/SettingsManagement/AppManifestHelper APIs; changed to ThemeResource in generic.xaml
+* NEW: Blend design-time support
+* NuGet only supports netcore451 now going forward
+
+## 1.3.0 (21-MAY-2013)
+* Fix #204: Fixed memory leak in CustomDialog (thanks kiwidev!)
+* NEW: Added WrapPanel
+
 ## 1.2.9 (22-APR-2013)
 * Fix #190: Setting IsOpen to false when the flyout is dismissed
 * Fix #189: Fixing en-ZA localization and adding en fallback resources
